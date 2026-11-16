@@ -1,26 +1,29 @@
-// @ts-check
+import { unified } from '@astrojs/markdown-remark';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
-// https://astro.build/config
 export default defineConfig({
-	integrations: [
-		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
-			sidebar: [
-				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
-				},
-				{
-					label: 'Reference',
-					items: [{ autogenerate: { directory: 'reference' } }],
-				},
-			],
-		}),
-	],
+  markdown: {
+    processor: unified({
+      remarkPlugins: [remarkMath],
+      rehypePlugins: [rehypeKatex],
+    }),
+  },
+  integrations: [
+    starlight({
+      title: '無料学習ノート',
+	  customCss: ['katex/dist/katex.min.css'],
+      locales: {
+        root: { label: '日本語', lang: 'ja' },
+      },
+      sidebar: [
+        {
+          label: '数学',
+          items: [{ autogenerate: { directory: 'mathematics' } }],
+        },
+      ],
+    }),
+  ],
 });
